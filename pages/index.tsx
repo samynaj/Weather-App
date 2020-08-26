@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import styles from '../styles/Home.module.css';
 import WeatherCard from '../components/weather-card'
 import Footer from '../components/footer';
@@ -79,29 +79,39 @@ class Home extends React.Component {
     let cell = Math.floor(temp - 273.15);
     return cell;
   }
-  
+  wrongCityInput(){
+    this.setState({error: false});
+  }
 
-  getWeather = async (e: { preventDefault: () => void; target: { elements: { city: { value: any; }; }; }; }) => {
+  getWeather = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const city = e.target.elements.city.value;
     
-    if(city){
-      const api_call = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`);
-      const res = await api_call.json();
-
-      console.log(res);
-      this.setState({
-        city: res.city.name,
-        days: res.list.filter((lis: any) => res.list.indexOf(lis) < 5),
-        error: false
-      })
-
-      
-      this.get_weatherIcon(this.weathericon, res.list.filter((lis: any) => res.list.indexOf(lis) < 5).map((day: { weather: { id: any; }[]; }) => day.weather[0].id));
-
-    }else {
-      this.setState({error: true})
+    try {
+      if(city){
+        const api_call = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`);
+        const res = await api_call.json();
+  
+        
+          this.setState({
+            city: res.city.name,
+            days: res.list.filter((lis: any) => res.list.indexOf(lis) < 5),
+            error: false
+          })
+  
+        
+        this.get_weatherIcon(this.weathericon, res.list.filter((lis: any) => res.list.indexOf(lis) < 5).map((day: { weather: { id: any; }[]; }) => day.weather[0].id));
+  
+        
+        
+      }else {
+        this.setState({error: true})
+      }
+    } catch (error) {
+      error.message = "You entered a wrong city";
+      this.setState({...this.state, city: error.message, error: true})
     }
+    
     
   }
   render() {
@@ -128,6 +138,7 @@ class Home extends React.Component {
             <div className={styles.city} >{this.state.city}</div>
             <div className={styles.grid}>
               {
+                 
                 this.state.days.map((day: { dt:  number; main: { temp: number; }; weather: { description: string; }[]; }) => 
                       <WeatherCard 
                         key={day.dt} 
@@ -139,6 +150,7 @@ class Home extends React.Component {
                         desc={day.weather[0].description}
                         weathericon={this.state.icon}
                       />)
+                      
               }
             </div>
           </main>
