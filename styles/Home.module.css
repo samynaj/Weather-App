@@ -72,13 +72,14 @@
 
 .button {
   color: #ffffff;
-  background: #4cc4c0;
-  border: 1px solid #4cc4c0;
+  background: #dd8c49;
+  border: 1px solid #dd8c49;
   outline: none;
+  border-radius: 10px;
 }
 
 .button:hover {
-  background: #3de0db;
+  background: #f89747;
   transform: scale(1.1);
 }
 
