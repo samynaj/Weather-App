@@ -81,7 +81,7 @@ class Home extends React.Component {
   }
   
 
-  getWeather = async (e: React.FormEvent) => {
+  getWeather = async (e: { preventDefault: () => void; target: { elements: { city: { value: any; }; }; }; }) => {
     e.preventDefault();
     const city = e.target.elements.city.value;
     
