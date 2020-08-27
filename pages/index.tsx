@@ -1,9 +1,9 @@
-import React, { FormEvent } from 'react';
 import styles from '../styles/Home.module.css';
 import WeatherCard from '../components/weather-card'
 import Footer from '../components/footer';
 import HeadComponent from '../components/head';
 import DisplayError from '../components/displayerror';
+import React from 'react';
 
 
 const API_KEY = '96a147e92a77f484f05c44c04753fe9a';
@@ -18,6 +18,7 @@ interface WeatherIconProps {
   Clouds: string;
 }
 interface StateProps {
+  input: string;
   city: string;
   days: (any)[];
   icon: string;
@@ -31,6 +32,7 @@ class Home extends React.Component {
   constructor(props: Readonly<{}>){
     super(props);
     this.state = {
+      input: "",
       city: "",
       days: [],
       icon: "",
@@ -79,29 +81,29 @@ class Home extends React.Component {
     let cell = Math.floor(temp - 273.15);
     return cell;
   }
-  wrongCityInput(){
-    this.setState({error: false});
+
+
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ input: e.target.value}) ;
+    console.log(this.state.input)
   }
 
-  getWeather = async (e: FormEvent<HTMLFormElement>) => {
+
+  getWeather = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const city = e.target.elements.city.value;
     
     try {
-      if(city){
-        const api_call = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`);
+      if(this.state.input){
+        const api_call = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${this.state.input}&appid=${API_KEY}`);
         const res = await api_call.json();
-  
-        
-          this.setState({
-            city: res.city.name,
-            days: res.list.filter((lis: any) => res.list.indexOf(lis) < 5),
-            error: false
-          })
-  
-        
+
+        this.setState({
+          city: res.city.name,
+          days: res.list.filter((lis: any) => res.list.indexOf(lis) < 5),
+          error: false
+        })
         this.get_weatherIcon(this.weathericon, res.list.filter((lis: any) => res.list.indexOf(lis) < 5).map((day: { weather: { id: any; }[]; }) => day.weather[0].id));
-  
+        
         
         
       }else {
@@ -132,7 +134,7 @@ class Home extends React.Component {
               WEATHER FORECAST
             </h1>
             <form onSubmit={this.getWeather}>
-              <input type='text' placeholder='City' name='city' className={styles.input}/>
+              <input type='text' placeholder='City' onChange={this.handleChange} className={styles.input}/>
               <button className={styles.button}>Check weather</button>
             </form>
             <div className={styles.city} >{this.state.city}</div>
