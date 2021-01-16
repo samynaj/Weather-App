@@ -85,7 +85,7 @@ class Home extends React.Component {
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ input: e.target.value}) ;
-    console.log(this.state.input)
+    // console.log(this.state.input)
   }
 
 
@@ -112,6 +112,7 @@ class Home extends React.Component {
     } catch (error) {
       error.message = "You entered a wrong city";
       this.setState({...this.state, city: error.message, error: true})
+      console.log(error)
     }
     
     
@@ -142,17 +143,17 @@ class Home extends React.Component {
               {
                  
                 this.state.days.map((day: { dt:  number; main: { temp: number; }; weather: { description: string; }[]; }) => 
-                      <WeatherCard 
-                        key={day.dt} 
-                        weekday={dateFormatter(day.dt).toLocaleString("en-US", {weekday: "long"})}
-                        month={dateFormatter(day.dt).toLocaleString("en-US", {month: "long"})}
-                        date={dateFormatter(day.dt).toLocaleString("en-US", {day: "numeric"})}
-                        hour={dateFormatter(day.dt).toLocaleString("en-US", {hour: "numeric"})}
-                        temp={this.calCelsius(day.main.temp)} 
-                        desc={day.weather[0].description}
-                        weathericon={this.state.icon}
-                      />)
-                      
+                  <WeatherCard 
+                    key={day.dt} 
+                    weekday={dateFormatter(day.dt).toLocaleString("en-US", {weekday: "long"})}
+                    month={dateFormatter(day.dt).toLocaleString("en-US", {month: "short"})}
+                    date={dateFormatter(day.dt).toLocaleString("en-US", {day: "numeric"})}
+                    hour={dateFormatter(day.dt).toLocaleString("en-US", {hour: "numeric"})}
+                    temp={this.calCelsius(day.main.temp)} 
+                    desc={day.weather[0].description}
+                    weathericon={this.state.icon}
+                  />
+                )      
               }
             </div>
           </main>
