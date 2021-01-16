@@ -6,7 +6,7 @@ import DisplayError from '../components/displayerror';
 import React from 'react';
 
 
-const API_KEY = '96a147e92a77f484f05c44c04753fe9a';
+// const API_KEY = '';
 
 interface WeatherIconProps {
   Thunderstorm: string;
@@ -94,7 +94,7 @@ class Home extends React.Component {
     
     try {
       if(this.state.input){
-        const api_call = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${this.state.input}&appid=${API_KEY}`);
+        const api_call = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this.state.input}&appid=${process.env.apikey}`);
         const res = await api_call.json();
 
         this.setState({
