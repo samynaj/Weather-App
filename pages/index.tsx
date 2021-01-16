@@ -102,13 +102,11 @@ class Home extends React.Component {
           days: res.list.filter((lis: any) => res.list.indexOf(lis) < 5),
           error: false
         })
-        this.get_weatherIcon(this.weathericon, res.list.filter((lis: any) => res.list.indexOf(lis) < 5).map((day: { weather: { id: any; }[]; }) => day.weather[0].id));
-        
-        
-        
-      }else {
-        this.setState({error: true})
+        this.get_weatherIcon(this.weathericon, res.list.filter((lis: any) => res.list.indexOf(lis) < 5).map((day: { weather: { id: any; }[]; }) => day.weather[0].id)); 
       }
+      // else {
+      //   this.setState({error: true})
+      // }
     } catch (error) {
       error.message = "You entered a wrong city";
       this.setState({...this.state, city: error.message, error: true})
